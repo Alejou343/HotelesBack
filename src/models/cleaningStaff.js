@@ -2,11 +2,10 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/sequelize.js";
 import {generateCustomId} from "../utils/handleIdGenerator.js"
 
-const OperationalRole = sequelize.define('OperationalRole', {
+const CleaningStaff = sequelize.define('CleaningStaff', {
 
-    id_operationalRole: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
+    id_cleaningStaff: {
+        type: DataTypes.INTEGER,HkSupervisorryKey: true,
         autoIncrement: true 
     },
     fullName: {
@@ -37,8 +36,8 @@ const OperationalRole = sequelize.define('OperationalRole', {
         allowNull: false,
         validate: {
             isIn: {
-                args: [['resort manager', 'general manager', 'remo supervisor', 'room control', 'front desk', 'assistan manager', 'remodeling official']],
-                msg: 'Only these roles are allowed: resort manager, general manager, remo supervisor, room control, front desk, assistan manager, remodeling official'
+                args: [['Hk Supervisor', 'HouseKeeper', 'HM Supervisor', 'HouseMan']],
+                msg: 'Only these roles are allowed: Hk Supervisor, HouseKeeper, HM Supervisor, HouseMan'
             }
         },
         set(value) {
@@ -60,27 +59,18 @@ const OperationalRole = sequelize.define('OperationalRole', {
             try {
                 let prefix;
                 switch (operationalRole.role) {
-                    case 'resort manager':
-                        prefix = 'RM';
+                    case 'Hk Supervisor':
+                        prefix = 'HKS';
                         break;
-                    case 'general manager':
-                        prefix = 'GM';
+                    case 'HouseKeeper':
+                        prefix = 'HK';
                         break;
-                    case 'remo supervisor':
-                        prefix = 'RS';
+                    case 'HM Supervisor':
+                        prefix = 'HMS';
                         break;
-                    case 'room control':
-                        prefix = 'RC';
-                        break;
-                    case 'front desk':
-                        prefix = 'FD';
-                        break;
-                    case 'assistan manager':
-                        prefix = 'AM';
-                        break;
-                    case 'remodeling official':
-                        prefix = 'RO';
-                        break;
+                    case 'HouseMan':
+                        prefix = 'HM';
+                        break;   
                     default:
                         throw new Error('Invalid role');
                 }
@@ -94,4 +84,4 @@ const OperationalRole = sequelize.define('OperationalRole', {
     }
 });
 
-export default OperationalRole;
+export default CleaningStaff;

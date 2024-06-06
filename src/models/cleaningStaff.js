@@ -5,7 +5,8 @@ import {generateCustomId} from "../utils/handleIdGenerator.js"
 const CleaningStaff = sequelize.define('CleaningStaff', {
 
     id_cleaningStaff: {
-        type: DataTypes.INTEGER,HkSupervisorryKey: true,
+        type: DataTypes.INTEGER,
+        primaryKey: true , 
         autoIncrement: true 
     },
     fullName: {
@@ -55,10 +56,10 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
     }
 }, {
     hooks: {
-        beforeCreate: async (operationalRole, options) => {
+        beforeCreate: async (cleaningStaff, options) => {
             try {
                 let prefix;
-                switch (operationalRole.role) {
+                switch (cleaningStaff.role) {
                     case 'Hk Supervisor':
                         prefix = 'HKS';
                         break;
@@ -74,7 +75,7 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
                     default:
                         throw new Error('Invalid role');
                 }
-                operationalRole.code_role = await generateCustomId(prefix, operationalRole.constructor, 'code_role', 'role', operationalRole.role);
+                cleaningStaff.code_role = await generateCustomId(prefix, cleaningStaff.constructor, 'code_role', 'role', cleaningStaff.role);
             
             } catch (error) {
                 console.error('Error al generar el ID personalizado:', error);

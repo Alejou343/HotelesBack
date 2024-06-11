@@ -1,9 +1,11 @@
 import express from 'express'
 import OperationalRole from '../controllers/ControllerOperationalRole.js'
 import MaintenanceInventory from '../controllers/ControllerMaintenanceInventory.js'
+import CleaningStaff from '../controllers/ControllerCleaningStaff.js'
 
 let operationalRole=new OperationalRole()
 let  maintenanceInventory= new MaintenanceInventory()
+let cleaningStaff=new CleaningStaff()
 
 let routes=express.Router()
 
@@ -20,6 +22,15 @@ routes.get('/api/maintenanceInventories',maintenanceInventory.getAll);
 routes.get('/api/maintenanceInventory/:id/',maintenanceInventory.getAllById)
 routes.put('/api/maintenanceInventory/:id/',maintenanceInventory.update)
 routes.delete('/api/maintenanceInventory/:id/',maintenanceInventory.delete)
+
+
+//CLEANING STAFF
+routes.post('/api/cleaningStaff',cleaningStaff.create);
+routes.get('/api/cleaningStaffs',cleaningStaff.getAll);
+routes.get('/api/cleaningStaff:id/',cleaningStaff.getAllById)
+routes.put('/api/cleaningStaff:id/',cleaningStaff.update)
+routes.delete('/api/cleaningStaff:id/',cleaningStaff.delete)
+
 
 
 export default routes

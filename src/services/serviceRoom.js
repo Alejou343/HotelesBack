@@ -25,13 +25,41 @@ export default class ServiceRoom {
         }
     }
 
-    async getById(idOperationalRole) {
+    async getById(idRoom) {
         try {
-            let operationalRoleById = await OperationalRole.findByPk(idOperationalRole)
-            if(!operationalRoleById){throw new Error('User not found')}
-            return operationalRoleById
+            let roomById = await Room.findByPk(idRoom)
+            if(!roomById){throw new Error('Room not found')}
+            return roomById
         } catch (error) {
-            throw new Error('User not found')
+            throw new Error('Room not found')
         }
-    }   
+    }
+    
+    async update(id, data) {
+        try {
+            const result = await Room.update(data, {
+                where: { id_room: id }
+            })
+            if (result[0] === 0) {
+                throw new Error('Room not found')
+            }
+            return result
+        } catch (error) {
+            throw new Error(`Unable to Update Room ${error}`)
+        }
+    }
+
+    async delete(id) {
+        try {
+            const result = await Room.destroy({
+                where: { id_room: id }
+            })
+            if (result[0] === 0) {
+                throw new Error('Room not found')
+            }
+            return result
+        } catch (error) {
+            throw new Error(`Unable to Update Room ${error}`)
+        }
+    }
 }

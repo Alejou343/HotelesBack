@@ -36,6 +36,15 @@ export default class ServiceCategoryRoom {
                         throw new Error(`Vacant and Dirty  category cannot be created: ${error.message}`)
                     }
                     break;
+                case 'Out of service ':
+                    try {
+                        data.abbreviation = 'OOO'
+                        let categoryRoom = new CategoryRoom(data)
+                        await categoryRoom.save()
+                    } catch (error) {
+                        throw new Error(`Out of service  category cannot be created: ${error.message}`)
+                    }
+                    break;
             }
 
 

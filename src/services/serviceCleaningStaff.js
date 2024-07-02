@@ -1,4 +1,4 @@
-import CleaningStaff  from "../models/cleaningStaff";
+import CleaningStaff  from "../models/cleaningStaff.js";
 import { generalValidations } from "../utils/generalValidations.js";
 
 export default class ServiceCleaningStaff {

@@ -1,21 +1,21 @@
-import ServiceCleaningStaff from "../services/serviceCleaningStaff.js";
+import ServiceCategoryRoom from "../services/serviceCategoryRoom.js";
 
-export default class CleaningStaff{
-    constructor() { }
+export default class CategoryRoom{
+    constructor(){}
 
-    static cleaningStaff = new ServiceCleaningStaff();
+    static categoryRoomService=new ServiceCategoryRoom()
 
     async create(request, response) {
         try {
             let data = request.body
-            await CleaningStaff.cleaningStaff.create(data)
-            response.status(200).json({
-                message: 'successes entering the operationalRole',
+            await CategoryRoom.categoryRoomService.create(data)
+            response.status(400).json({
+                message: 'successes entering the  Category Room',
                 data: null
             })
         } catch (error) {
             response.status(400).json({
-                message: `Error creating user ${error}`,
+                message: `Error creating Category Room ${error}`,
                 data: null
             })
         }
@@ -23,12 +23,12 @@ export default class CleaningStaff{
     async getAll(request, response) {
         try {
             response.status(200).json({
-                message: 'successes find the operational roles',
-                data: await CleaningStaff.cleaningStaff.getAll()
+                message: 'successes find the  Category Rooms',
+                data: await CategoryRoom.categoryRoomService.getAll()
             })
         } catch (error) {
             response.status(400).json({
-                message: `Error searching for users ${error}`,
+                message: `Error searching for  CategoryRoom ${error}`,
                 data: null
             })
         }
@@ -38,29 +38,28 @@ export default class CleaningStaff{
         try {
             let id = request.params.id
             response.status(200).json({
-                message: 'successes find the user',
-                data: await CleaningStaff.cleaningStaff.getById(id)
+                message: 'successes find the  category room',
+                data: await CategoryRoom.categoryRoomService.getById(id)
             })
         } catch (error) {
             response.status(400).json({
-                message: `Error searching for user  ${error}`,
+                message: `Error searching for  category room  ${error}`,
                 data: null
             })
         }
     }
-
     async update(request, response) {
         try {
             let id = request.params.id
             let data = request.body
-            await CleaningStaff.cleaningStaff.update(id, data)
+            await CategoryRoom.categoryRoomService.update(id, data)
             response.status(200).json({
-                message: 'Success Upgrading the user',
+                message: 'Success Upgrading the  category room',
                 data: null
             })
         } catch (error) {
             response.status(400).json({
-                message: `Error Upgrading the user ${error}`,
+                message: `Error Upgrading the category room ${error}`,
                 data: null
             })
         }
@@ -69,14 +68,14 @@ export default class CleaningStaff{
     async delete(request, response) {
         try {
             let id = request.params.id
-            const result = await CleaningStaff.cleaningStaff.delete(id)
+            const result = await CategoryRoom.categoryRoomService.delete(id)
             response.status(200).json({
-                message: 'User deleted successfully',
+                message: ' Category Room deleted successfully',
                 data: result
             })
         } catch (error) {
             response.status(400).json({
-                message: `Error deleted the user ${error}`,
+                message: `Error  category deleted the Room ${error}`,
                 data: null
             })
         }

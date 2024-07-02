@@ -5,99 +5,108 @@ export default class ServiceCategoryRoom {
 
     async create(data) {
         try {
-            const existingName = await CategoryRoom.findOne({ where: { name: data.name } })
-            if (existingName) throw new Error('Categry name already exists')
+            const existingName = await CategoryRoom.findOne({ where: { name: data.name } });
+            if (existingName) throw new Error('Category name already exists');
 
-            switch (data.name) {
-                case 'Vacant and Clean':
-                    try {
-                        data.abbreviation = 'V/C'
-                        let categoryRoom = new CategoryRoom(data)
-                        await categoryRoom.save()
-                    } catch (error) {
-                        throw new Error(`Vacant and Clean category cannot be created: ${error.message}`)
-                    }
-                    break;
-                case 'Occupied':
-                    try {
-                        data.abbreviation = 'O'
-                        let categoryRoom = new CategoryRoom(data)
-                        await categoryRoom.save()
-                    } catch (error) {
-                        throw new Error(`Occupied cannot be created: ${error.message}`)
-                    }
-                    break;
-                case 'Vacant and dirty':
-                    try {
-                        data.abbreviation = 'V/D'
-                        let categoryRoom = new CategoryRoom(data)
-                        await categoryRoom.save()
-                    } catch (error) {
-                        throw new Error(`Vacant and Dirty  category cannot be created: ${error.message}`)
-                    }
-                    break;
-                case 'Out of service ':
-                    try {
-                        data.abbreviation = 'OOO'
-                        let categoryRoom = new CategoryRoom(data)
-                        await categoryRoom.save()
-                    } catch (error) {
-                        throw new Error(`Out of service  category cannot be created: ${error.message}`)
-                    }
-                    break;
+            // Función para asignar automáticamente la abreviatura
+            const assignAbbreviation = (name) => {
+                switch (name) {
+                    case 'Vacant and Clean':
+                        return 'V/C';
+                    case 'Occupied':
+                        return 'O';
+                    case 'Vacant and Dirty':
+                        return 'V/D';
+                    case 'Out of Service':
+                        return 'OOO';
+                    case 'Cleaning Start':
+                        return 'CLEAN/IN';
+                    case 'Cleaning Out':
+                        return 'CLEAN/OUT';
+                    case 'Pending for supervision':
+                        return 'P/S';
+                    case 'Removed':
+                        return 'RM';
+                    case 'Stay Over':
+                        return 'S/O';
+                    case 'Early check out ':
+                        return 'E/CH';
+                    case 'Maintenance in':
+                        return 'MT/IN';
+                    case 'Maintenance out':
+                        return 'MT/OUT';
+                    case 'Maintenance Project':
+                        return 'M/P';
+                    case 'Linen Remove':
+                        return 'DEP';
+                    case 'Remodeling Project assigned':
+                        return 'REMO PROJECT';
+
+                    default:
+                        return null;
+                }
+            };
+            // Asignar abreviatura automáticamente o verificar si ya está proporcionada
+            data.abbreviation = assignAbbreviation(data.name) || data.abbreviation;
+
+            if (!data.abbreviation) {
+                throw new Error('Abbreviation is required for custom categories');
             }
 
-
+            // Guardar la nueva categoría
+            let categoryRoom = new CategoryRoom(data);
+            await categoryRoom.save();
 
         } catch (error) {
-            throw new Error(`CAN NOT CREATE ${error}`)
+            throw new Error(`CAN NOT CREATE: ${error.message}`);
         }
     }
 
+
     async getAll() {
         try {
-            let room = await Room.findAll()
-            return room
+            let categoryRoom = await CategoryRoom.findAll()
+            return categoryRoom
         } catch (error) {
             throw new Error('CAN NOT FIND')
         }
     }
 
-    async getById(idRoom) {
+    async getById(idCategoryRoom) {
         try {
-            let roomById = await Room.findByPk(idRoom)
-            if (!roomById) { throw new Error('Room not found') }
-            return roomById
+            let categoryRoomById = await CategoryRoom.findByPk(idCategoryRoom)
+            if (!categoryRoomById) { throw new Error('Category Room by ID not found') }
+            return categoryRoomById
         } catch (error) {
-            throw new Error('Room not found')
+            throw new Error(' Category Room not found')
         }
     }
 
     async update(id, data) {
         try {
-            const result = await Room.update(data, {
-                where: { id_room: id }
+            const result = await CategoryRoom.update(data, {
+                where: { id_categoryRoom: id }
             })
             if (result[0] === 0) {
-                throw new Error('Room not found')
+                throw new Error(' Category Room not found')
             }
             return result
         } catch (error) {
-            throw new Error(`Unable to Update Room ${error}`)
+            throw new Error(`Unable to Update  category Room ${error}`)
         }
     }
 
     async delete(id) {
         try {
-            const result = await Room.destroy({
-                where: { id_room: id }
+            const result = await CategoryRoom.destroy({
+                where: { id_categoryRoom: id }
             })
             if (result[0] === 0) {
-                throw new Error('Room not found')
+                throw new Error('Category Room not found')
             }
             return result
         } catch (error) {
-            throw new Error(`Unable to Update Room ${error}`)
+            throw new Error(`Unable to Update Category Room ${error}`)
         }
     }
 }

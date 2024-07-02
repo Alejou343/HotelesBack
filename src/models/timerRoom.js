@@ -10,6 +10,7 @@ const TimerRoom=sequelize.define('TimerRoom',{
         primarykey: true,
         autoIncrement:true,
     },
+    
     state:{
         type: DataTypes.BOOLEAN,
         allowNull: false,

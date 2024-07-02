@@ -12,8 +12,8 @@ const CategoryRoom = sequelize.define('CategoryRoom', {
         allowNull: false,
         validate: {
             isIn: {
-                args: [['Vacant and Clean', 'Occupied', 'Vacant and dirty', 'Out of service ', 'Cleaning start', 'Cleaning out', 'Pending for supervision','Removed','Maintenance in','Maintenance out','Maintenance Project','Linen Remove']],
-                msg: 'Only these Categories are allowed: Vacant and Clean, Occupied , Vacant and dirty, Out of service  , Cleaning start , Cleaning out , Pending for supervision , Removed , Maintenance in, Maintenance out , Maintenance Project , Linen Remove'
+                args: [['Vacant and Clean', 'Occupied', 'Vacant and dirty', 'Out of service ', 'Cleaning start', 'Cleaning out', 'Pending for supervision','Removed','Stay over','Early check out ','Maintenance in','Maintenance out','Maintenance Project','Linen Remove','Remodeling Project assigned']],
+                msg: 'Only these Categories are allowed: Vacant and Clean, Occupied , Vacant and dirty, Out of service  , Cleaning start , Cleaning out , Pending for supervision , Removed , Stay over , Early check out  , Maintenance in, Maintenance out , Maintenance Project , Linen Remove, Remodeling Project assigned'
             }
         },
         set(value) {

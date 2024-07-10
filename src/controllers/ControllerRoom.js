@@ -9,7 +9,7 @@ export default class Room {
         try {
             let data = request.body
             await Room.roomService.create(data)
-            response.status(400).json({
+            response.status(200).json({
                 message: 'successes entering the Room',
                 data: null
             })

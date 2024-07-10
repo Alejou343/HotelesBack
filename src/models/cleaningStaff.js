@@ -1,17 +1,17 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/sequelize.js";
-import {generateCustomId} from "../utils/handleIdGenerator.js"
+import { generateCustomId } from "../utils/handleIdGenerator.js";
 
 const CleaningStaff = sequelize.define('CleaningStaff', {
-
     id_cleaningStaff: {
         type: DataTypes.INTEGER,
-        primaryKey: true , 
-        autoIncrement: true 
+        primaryKey: true,
+        autoIncrement: true
     },
     fullName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true, // Agregar unique para crear un índice único
     },
     phone: {
         type: DataTypes.STRING,
@@ -37,7 +37,7 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
         allowNull: false,
         validate: {
             isIn: {
-                args: [['Hk Supervisor', 'HouseKeeper', 'HM Supervisor', 'HouseMan']],
+                args: [['hk supervisor', 'housekeeper', 'hm supervisor', 'houseman']],
                 msg: 'Only these roles are allowed: Hk Supervisor, HouseKeeper, HM Supervisor, HouseMan'
             }
         },
@@ -60,23 +60,22 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
             try {
                 let prefix;
                 switch (cleaningStaff.role) {
-                    case 'Hk Supervisor':
+                    case 'hk supervisor':
                         prefix = 'HKS';
                         break;
-                    case 'HouseKeeper':
+                    case 'housekeeper':
                         prefix = 'HK';
                         break;
-                    case 'HM Supervisor':
+                    case 'hm supervisor':
                         prefix = 'HMS';
                         break;
-                    case 'HouseMan':
+                    case 'houseman':
                         prefix = 'HM';
-                        break;   
+                        break;
                     default:
                         throw new Error('Invalid role');
                 }
                 cleaningStaff.code_role = await generateCustomId(prefix, cleaningStaff.constructor, 'code_role', 'role', cleaningStaff.role);
-            
             } catch (error) {
                 console.error('Error al generar el ID personalizado:', error);
                 throw error;
@@ -86,3 +85,4 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
 });
 
 export default CleaningStaff;
+

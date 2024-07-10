@@ -4,14 +4,20 @@ import MaintenanceInventory from '../controllers/ControllerMaintenanceInventory.
 import CleaningStaff from '../controllers/ControllerCleaningStaff.js'
 import Room from '../controllers/ControllerRoom.js'
 import CategoryRoom from '../controllers/ControllerCategoryRoom.js'
+import Pocki from '../pocki/controllerPocki.js'
 
 let operationalRole=new OperationalRole()
 let  maintenanceInventory= new MaintenanceInventory()
 let cleaningStaff=new CleaningStaff()
 let room=new Room()
 let categoryRoom= new CategoryRoom()
+let pocki=new Pocki()
 
 let routes=express.Router()
+
+//POCKI
+routes.post('/api/pocki',pocki.handleWhatsApp)
+routes.get('/api/pocki',pocki.getAll)
 
 //OPERATIONAL ROLE
 routes.post('/api/operationalRole',operationalRole.createOperationalRole);

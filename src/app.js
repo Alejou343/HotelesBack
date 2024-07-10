@@ -6,7 +6,7 @@ import sequelize from './database/sequelize.js'
 const app = express();
 const puerto=process.env.PORT ;
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log('Base de datos sincronizada');
   })

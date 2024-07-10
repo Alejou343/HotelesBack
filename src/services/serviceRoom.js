@@ -18,7 +18,7 @@ export default class ServiceRoom {
 
     async getAll() {
         try {
-            let room = await Room.findAll()
+            let room = await Room.findAll({ attributes: ['id_room', 'number', 'state'] })
             return room
         } catch (error) {
             throw new Error('CAN NOT FIND')

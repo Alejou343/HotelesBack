@@ -27,7 +27,7 @@ export default class ServiceCleaningStaff {
 
     async getAll() {
         try {
-            let cleaningStaff= await CleaningStaff.findAll({ attributes: ['fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
+            let cleaningStaff= await CleaningStaff.findAll({ attributes: ['id_cleaningStaff', 'fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
             return cleaningStaff
         } catch (error) {
             throw new Error(`CAN NOT FIND`)

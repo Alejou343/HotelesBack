@@ -27,7 +27,7 @@ export default class ServiceMaintenanceInventory {
 
     async getAll() {
         try {
-            let maintenanceInventory= await MaintenanceInventory.findAll({ attributes: ['id_maintenanceInventory', 'fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
+            let maintenanceInventory= await MaintenanceInventory.findAll({ attributes: ['fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
             return maintenanceInventory
         } catch (error) {
             throw new Error(`CAN NOT FIND`)

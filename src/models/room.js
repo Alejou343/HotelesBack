@@ -5,6 +5,7 @@ const Room = sequelize.define('Room', {
     id_room: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true
     },
     hotelName: {
         type: DataTypes.STRING,
@@ -29,3 +30,4 @@ const Room = sequelize.define('Room', {
 });
 
 export default Room;
+

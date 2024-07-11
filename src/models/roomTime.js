@@ -19,7 +19,10 @@ const RoomTime = sequelize.define('RoomTime', {
     },
     category: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isIn: [['v/c', 'o', 'v/d', 'ooo', 'clean/in', 'clean/out', 'p/s', 'RM', 'S/O', 'E/CH', 'MT/IN', 'MT/OUT', 'M/P', 'REMO PROJECT']]
+        }
     },
     profile: {
         type: DataTypes.STRING,
@@ -39,7 +42,7 @@ const RoomTime = sequelize.define('RoomTime', {
 });
 
 // Relaciones
-Room.hasMany(RoomTime, { foreignKey: 'roomNumber', sourceKey: 'number' });
+Room.hasMany(RoomTime, { foreignKey: 'roomNumber', sourceKey: 'number', onDelete: 'CASCADE' });
 RoomTime.belongsTo(Room, { foreignKey: 'roomNumber', targetKey: 'number' });
 
 CleaningStaff.hasMany(RoomTime, { foreignKey: 'profile', sourceKey: 'fullName' });

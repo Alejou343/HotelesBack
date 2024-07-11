@@ -5,7 +5,7 @@ import OperationalRole from '../models/operationalRole.js';
 import sequelize from '../database/sequelize.js';
 
 export default class ServicePocki {
-    constructor() {}
+    constructor() { }
 
     async handleWhatsApp(profileIdentification, roomNumber, message) {
         try {
@@ -90,31 +90,40 @@ export default class ServicePocki {
     async updateRoomCategoryAndStatus(room, newCategory, profileIdentification, status_k) {
         const transaction = await sequelize.transaction();
         try {
-            // Actualizar la categoría de la habitación y el estado
-            const [updatedRows] = await Room.update(
-                { name_category_room: newCategory, state: status_k },
-                { where: { id_room: room.id_room }, transaction }
-            );
-            if (updatedRows === 0) {
-                throw new Error('No se pudo actualizar la habitación');
-            }
-
-            // Actualizar el estado del CleaningStaff correspondiente
-            const [updatedPeople] = await CleaningStaff.update(
+            // Actualizar el estado del personal
+            const [updatedCleaningStaff] = await CleaningStaff.update(
                 { state: status_k },
                 { where: { code_role: profileIdentification }, transaction }
             );
-            if (updatedPeople === 0) {
-                throw new Error('No se pudo actualizar el usuario');
+    
+            const [updatedMaintenanceInventory] = await MaintenanceInventory.update(
+                { state: status_k },
+                { where: { code_role: profileIdentification }, transaction }
+            );
+    
+            const [updatedOperationalRole] = await OperationalRole.update(
+                { state: status_k },
+                { where: { code_role: profileIdentification }, transaction }
+            );
+    
+            if (updatedCleaningStaff === 0 && updatedMaintenanceInventory === 0 && updatedOperationalRole === 0) {
+                throw new Error('No se pudo actualizar el usuario en ninguna tabla');
             }
-
+    
+            // Actualizar la categoría y el estado de la habitación
+            room.name_category_room = newCategory;
+            room.state = status_k; // Asegurarse de actualizar el estado
+            await room.save({ transaction });
+    
             await transaction.commit();
             console.log(`Categoría de habitación actualizada a "${newCategory}" y estado a ${status_k}`);
         } catch (error) {
             await transaction.rollback();
+            console.error('Error durante la actualización de categoría y estado:', error);
             throw error;
         }
     }
+    
 
     async sendAlertToSupervisor(supervisorNumber, message) {
         // Lógica para enviar alerta al número del supervisor
@@ -137,9 +146,9 @@ export default class ServicePocki {
     getHouseManActions(message, room) {
         switch (message.toLowerCase()) {
             case "dep":
-                return { newCategory: 'Dep', status_k: false };
+                return { newCategory: 'DEP', status_k: false };
             case "confirmar":
-                return { newCategory: 'V/C', status_k: true, alertMessage: "El HM ha terminado la habitación, quedó en V/C", supervisorNumber: room.hm_supervisor_number };
+                return { newCategory: 'v/c', status_k: true, alertMessage: "El HM ha terminado la habitación, quedó en V/C", supervisorNumber: room.hm_supervisor_number };
             case "ooo":
                 return { newCategory: 'ooo', status_k: false, alertMessage: "El HM ha pasado algo en la habitación, queda en OOO", supervisorNumber: room.hm_supervisor_number };
             default:
@@ -150,7 +159,7 @@ export default class ServicePocki {
     getMaintenanceTechActions(message, room) {
         switch (message.toLowerCase()) {
             case "mt/in":
-                return { newCategory: 'mt/in', status_k: false };
+                return { newCategory: 'MT/IN', status_k: false };
             case "mt/out":
                 return { newCategory: 'v/c', status_k: true };
             case "ooo":
@@ -163,7 +172,7 @@ export default class ServicePocki {
     getPainterActions(message, room) {
         switch (message.toLowerCase()) {
             case "paint/in":
-                return { newCategory: 'paint/in', status_k: false };
+                return { newCategory: 'PAINT/IN', status_k: false };
             case "paint/out":
                 return { newCategory: 'v/c', status_k: true, alertMessage: "La habitación ya quedó", supervisorNumber: room.mt_supervisor_number };
             default:
@@ -174,7 +183,7 @@ export default class ServicePocki {
     getRemodelingOfficialActions(message, room) {
         switch (message.toLowerCase()) {
             case "remo/in":
-                return { newCategory: 'remo/in', status_k: false };
+                return { newCategory: 'REMO/IN', status_k: false };
             case "remo/out":
                 return { newCategory: 'v/c', status_k: true, alertMessage: "La habitación ya quedó", supervisorNumber: room.remo_supervisor_number };
             default:

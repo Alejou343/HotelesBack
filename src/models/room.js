@@ -19,7 +19,7 @@ const Room = sequelize.define('Room', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: [['v/c', 'o', 'v/d', 'ooo', 'clean/in', 'clean/out', 'p/s', 'RM', 'S/O', 'E/CH', 'MT/IN', 'MT/OUT', 'M/P', 'REMO PROJECT']]
+            isIn: [['v/c', 'o', 'v/d', 'ooo', 'clean/in', 'clean/out', 'p/s', 'REMO/IN','PAINT/IN','DEP','RM', 'S/O', 'E/CH', 'MT/IN', 'MT/OUT', 'M/P', 'REMO PROJECT','Confirmar']]
         }
     },
     state: {

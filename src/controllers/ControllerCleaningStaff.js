@@ -10,7 +10,7 @@ export default class CleaningStaff{
             let data = request.body
             await CleaningStaff.cleaningStaff.create(data)
             response.status(200).json({
-                message: 'successes entering the operationalRole',
+                message: 'successes entering the CleaningStaff',
                 data: null
             })
         } catch (error) {
@@ -23,7 +23,7 @@ export default class CleaningStaff{
     async getAll(request, response) {
         try {
             response.status(200).json({
-                message: 'successes find the operational roles',
+                message: 'successes find the CleaningStaff',
                 data: await CleaningStaff.cleaningStaff.getAll()
             })
         } catch (error) {

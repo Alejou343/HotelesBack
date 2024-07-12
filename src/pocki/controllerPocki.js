@@ -18,7 +18,6 @@ export default class Pocki {
             const trimmedMessage = message.trim().toLowerCase();
 
             const result = await pocki.handleWhatsApp(profileIdentification, roomNumber, trimmedMessage);
-
             response.status(200).json({
                 message: 'Éxito',
                 data: result

@@ -14,31 +14,32 @@ export default class ServicePocki {
             if (!staff) {
                 throw new Error('Identificación de perfil no válida');
             }
-
+    
             console.log('Identificación de perfil:', profileIdentification);
             console.log('Número de habitación:', roomNumber);
             console.log('Mensaje original de WhatsApp:', message);
-
+            console.log('Personal encontrado:', staff);
+    
             // Buscar la habitación
             const room = await Room.findOne({ where: { number: roomNumber } });
             if (!room) {
                 throw new Error(`No se encontró habitación con número ${roomNumber}`);
             }
-
+    
             let newCategory;
             let status_k;
             let alertMessage;
             let supervisorNumber;
-
+    
             // Definir mensajes permitidos y acciones asociadas para cada perfil
-            switch (staff.role) {
+            switch (staff.role.toLowerCase()) {
                 case 'housekeeper':
                     ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getHouseKeeperActions(message, room));
                     break;
                 case 'houseman':
                     ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getHouseManActions(message, room));
                     break;
-                case 'maintenace tech':
+                case 'maintenance tech':
                     ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getMaintenanceTechActions(message, room));
                     break;
                 case 'painter':
@@ -47,64 +48,100 @@ export default class ServicePocki {
                 case 'remodeling official':
                     ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getRemodelingOfficialActions(message, room));
                     break;
-                default:
-                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getManagerActions(message, room, staff.role));
+                case 'quality control':
+                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
                     break;
-            }
+                case 'building manager':
+                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
+                    break;
+                case 'assistant manager':
+                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
+                    break;
 
+                case 'operation manager':
+                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
+                    break;
+                case 'general manager':
+                    ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
+                    break;
+                case 'resort manager':
+                ({ newCategory, status_k, alertMessage, supervisorNumber } = this.getOperationalCore(message, room));
+                break;
+                
+                default:
+                    throw new Error(`Rol no reconocido: ${staff.role}`);
+            }
+    
             if (!newCategory) {
                 throw new Error(`Mensaje inválido para el rol ${staff.role}`);
             }
-
+    
             await this.updateRoomCategoryAndStatus(room, newCategory, profileIdentification, status_k);
-
+    
             if (alertMessage && supervisorNumber) {
                 await this.sendAlertToSupervisor(supervisorNumber, alertMessage);
             }
-
+    
             console.log('Actualización de categoría de habitación realizada con éxito');
             console.log('Nueva categoría:', newCategory);
-
+    
         } catch (error) {
             console.error('Error manejando mensaje de WhatsApp:', error);
             throw error;
         }
     }
-
+    
     async findStaffByRole(profileIdentification) {
         try {
             let staff = await CleaningStaff.findOne({ where: { code_role: profileIdentification } });
-            if (staff) return staff;
-
+            if (staff) {
+                console.log('CleaningStaff encontrado:', staff);
+                return staff;
+            }
+    
             staff = await MaintenanceInventory.findOne({ where: { code_role: profileIdentification } });
-            if (staff) return staff;
-
+            if (staff) {
+                console.log('MaintenanceInventory encontrado:', staff);
+                return staff;
+            }
+    
             staff = await OperationalRole.findOne({ where: { code_role: profileIdentification } });
-            return staff;
+            if (staff) {
+                console.log('OperationalRole encontrado:', staff);
+                return staff;
+            }
+    
+            console.log('No se encontró el personal en ninguna tabla para el perfil:', profileIdentification);
+            return null;
         } catch (error) {
             console.error('Error buscando el personal por rol:', error);
             throw error;
         }
     }
-
+    
     async updateRoomCategoryAndStatus(room, newCategory, profileIdentification, status_k) {
         const transaction = await sequelize.transaction();
         try {
+            console.log('Iniciando transacción para actualizar categoría y estado de la habitación...');
+    
             // Actualizar el estado del personal
             const [updatedCleaningStaff] = await CleaningStaff.update(
                 { state: status_k },
                 { where: { code_role: profileIdentification }, transaction }
             );
+            console.log('CleaningStaff actualizado:', updatedCleaningStaff);
     
             const [updatedMaintenanceInventory] = await MaintenanceInventory.update(
                 { state: status_k },
                 { where: { code_role: profileIdentification }, transaction }
             );
+            console.log('MaintenanceInventory actualizado:', updatedMaintenanceInventory);
     
             const [updatedOperationalRole] = await OperationalRole.update(
                 { state: status_k },
                 { where: { code_role: profileIdentification }, transaction }
             );
+            console.log('OperationalRole actualizado:', updatedOperationalRole);
     
             if (updatedCleaningStaff === 0 && updatedMaintenanceInventory === 0 && updatedOperationalRole === 0) {
                 throw new Error('No se pudo actualizar el usuario en ninguna tabla');
@@ -120,11 +157,10 @@ export default class ServicePocki {
         } catch (error) {
             await transaction.rollback();
             console.error('Error durante la actualización de categoría y estado:', error);
-            throw error;
+            throw error; // Asegúrate de propagar el error para manejarlo correctamente en el lugar donde se llama este método
         }
     }
     
-
     async sendAlertToSupervisor(supervisorNumber, message) {
         // Lógica para enviar alerta al número del supervisor
         console.log(`Alerta enviada al número ${supervisorNumber}: ${message}`);
@@ -142,7 +178,7 @@ export default class ServicePocki {
                 return {};
         }
     }
-
+    
     getHouseManActions(message, room) {
         switch (message.toLowerCase()) {
             case "dep":
@@ -155,7 +191,7 @@ export default class ServicePocki {
                 return {};
         }
     }
-
+    
     getMaintenanceTechActions(message, room) {
         switch (message.toLowerCase()) {
             case "mt/in":
@@ -168,18 +204,18 @@ export default class ServicePocki {
                 return {};
         }
     }
-
+    
     getPainterActions(message, room) {
         switch (message.toLowerCase()) {
             case "paint/in":
                 return { newCategory: 'PAINT/IN', status_k: false };
             case "paint/out":
-                return { newCategory: 'v/c', status_k: true, alertMessage: "La habitación ya quedó", supervisorNumber: room.mt_supervisor_number };
+                return { newCategory: 'v/c', status_k: true, alertMessage: "La habitación ya quedó", supervisorNumber: room.paint_supervisor_number };
             default:
                 return {};
         }
     }
-
+    
     getRemodelingOfficialActions(message, room) {
         switch (message.toLowerCase()) {
             case "remo/in":
@@ -190,38 +226,29 @@ export default class ServicePocki {
                 return {};
         }
     }
-
-    getManagerActions(message, room, role) {
-        let alertMessage;
-        let supervisorNumber;
-
+    
+    getOperationalCore(message, room) {
         switch (message.toLowerCase()) {
             case "rm":
-                return { newCategory: 'RM' };
+                return { newCategory: 'o', status_k: false };
             case "ooo":
-                alertMessage = "Se ha detectado un incidente en la habitación, queda en OOO";
-                supervisorNumber = this.getSupervisorNumber(role);
-                return { newCategory: 'ooo', alertMessage, supervisorNumber };
-            case "o":
-                return { newCategory: 'o' };
+                return { newCategory: 'ooo', status_k: false, alertMessage: "La habitación ya quedó", supervisorNumber: room.remo_supervisor_number };
             case "v/c":
-                return { newCategory: 'V/C' };
+                return { newCategory: 'v/c', status_k: true, alertMessage: "La habitación ya quedó", supervisorNumber: room.remo_supervisor_number };
             case "pm":
-                alertMessage = "La habitación ha sido marcada como PM";
-                supervisorNumber = this.getSupervisorNumber(role);
-                return { newCategory: 'PM', alertMessage, supervisorNumber };
+                return { newCategory: 'PM', status_k: false, alertMessage: "La habitación ya quedó", supervisorNumber: room.remo_supervisor_number };
             default:
                 return {};
         }
     }
-
+    
     getSupervisorNumber(role) {
         // Lógica para obtener el número del supervisor basado en el rol
         // Puedes ajustar esto según tu estructura de datos
         switch (role) {
             case 'houseman':
                 return 'HM Supervisor Number';
-            case 'maintenace tech':
+            case 'maintenance tech':
                 return 'MT Supervisor Number';
             case 'painter':
                 return 'MT Supervisor Number';

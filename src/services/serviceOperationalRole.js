@@ -25,7 +25,7 @@ export default class ServiceOperationalRole {
 
     async getAll() {
         try {
-            let operationalRoles = await OperationalRole.findAll({ attributes: ['fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
+            let operationalRoles = await OperationalRole.findAll({ attributes: ['id_operationalRole', 'fullName', 'phone', 'email', 'role', 'code_role', 'state'] })
             return operationalRoles
         } catch (error) {
             throw new Error(`CAN NOT FIND`)

@@ -24,14 +24,14 @@ routes.post('/api/operationalRole',operationalRole.createOperationalRole);
 routes.get('/api/operationalRoles',operationalRole.getAll);
 routes.get('/api/operationalRole/:id/',operationalRole.getAllById)
 routes.put('/api/operationalRole/:id/',operationalRole.update)
-routes.delete('/api/operationalRole/:id/',operationalRole.delete)
+routes.delete('/api/operationalRoles/:id/',operationalRole.delete)
 
 //MAINTENANCE INVENTORY
 routes.post('/api/maintenanceInventory',maintenanceInventory.create);
 routes.get('/api/maintenanceInventories',maintenanceInventory.getAll);
 routes.get('/api/maintenanceInventory/:id/',maintenanceInventory.getAllById)
 routes.put('/api/maintenanceInventory/:id/',maintenanceInventory.update)
-routes.delete('/api/maintenanceInventory/:id/',maintenanceInventory.delete)
+routes.delete('/api/maintenanceInventories/:id/',maintenanceInventory.delete)
 
 
 //CLEANING STAFF
@@ -39,7 +39,7 @@ routes.post('/api/cleaningStaff',cleaningStaff.create);
 routes.get('/api/cleaningStaffs',cleaningStaff.getAll);
 routes.get('/api/cleaningStaff/:id/',cleaningStaff.getAllById)
 routes.put('/api/cleaningStaff/:id/',cleaningStaff.update)
-routes.delete('/api/cleaningStaff/:id/',cleaningStaff.delete)
+routes.delete('/api/cleaningStaffs/:id/',cleaningStaff.delete)
 
 
 //ROOM
@@ -47,14 +47,14 @@ routes.post('/api/room',room.create);
 routes.get('/api/rooms',room.getAll);
 routes.get('/api/room/:id/',room.getAllById)
 routes.put('/api/room/:id/',room.update)
-routes.delete('/api/room/:id/',room.delete)
+routes.delete('/api/rooms/:id/',room.delete)
 
 //CATEGORY ROOM
 routes.post('/api/CategoryRoom',categoryRoom.create);
 routes.get('/api/CategoryRooms',categoryRoom.getAll);
 routes.get('/api/CategoryRoom/:id/',categoryRoom.getAllById)
 routes.put('/api/CategoryRoom/:id/',categoryRoom.update)
-routes.delete('/api/CategoryRoom/:id/',categoryRoom.delete)
+routes.delete('/api/CategoryRooms/:id/',categoryRoom.delete)
 
 
 export default routes

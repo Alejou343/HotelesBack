@@ -5,8 +5,6 @@ export default class ServiceRoom {
 
     async create(data) {
         try {
-            const existingNumberRoom = await Room.findOne({ where: { number: data.number } })
-            if (existingNumberRoom) throw new Error('Number room already exists')
             if (!data.number) throw new Error('Ther number is required')
 
             let registerNumber = new Room(data)

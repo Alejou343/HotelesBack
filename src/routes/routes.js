@@ -19,6 +19,15 @@ let routes=express.Router()
 routes.post('/api/pocki',pocki.handleWhatsApp)
 routes.get('/api/pocki',pocki.getAll)
 
+//ASIGNACIONES DE HOUSEKEEPERS
+routes.post('/api/pocki/autoAssignHouseKeeper', pocki.autoAssignHouseKeeper);
+routes.get('/api/pocki/getWorkerAssignments', pocki.getWorkerAssignments);
+
+
+// Nuevas rutas para asignaciones
+//routes.post('/api/pocki/assignRoles', pocki.assignRoles)
+routes.get('/api/pocki/showAssignments', pocki.showAssignments)
+
 //OPERATIONAL ROLE
 routes.post('/api/operationalRole',operationalRole.createOperationalRole);
 routes.get('/api/operationalRoles',operationalRole.getAll);

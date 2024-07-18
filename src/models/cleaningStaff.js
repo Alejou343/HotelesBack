@@ -84,5 +84,6 @@ const CleaningStaff = sequelize.define('CleaningStaff', {
     }
 });
 
+
 export default CleaningStaff;
 

@@ -48,6 +48,22 @@ export default class Room {
             })
         }
     }
+
+    async getAllByHotelName(request, response) {
+        try {
+            let hotelName = request.params.hotelName
+            response.status(200).json({
+                message: 'successes find the room',
+                data: await Room.roomService.getByHotelName(hotelName)
+            })
+        } catch (error) {
+            response.status(400).json({
+                message: `Error searching for room  ${error}`,
+                data: null
+            })
+        }
+    }
+
     async update(request, response) {
         try {
             let id = request.params.id

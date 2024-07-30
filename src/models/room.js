@@ -11,7 +11,7 @@ const Room = sequelize.define('Room', {
         type: DataTypes.STRING,
     },
     number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     name_category_room: {

@@ -160,9 +160,9 @@ export default class Pocki {
         try {
             const { roomNumber } = request.body;
             let pocki = new ServicePocki();
-            await pocki.autoAssignHouseKeeper(roomNumber);
+            const answer = await pocki.autoAssignHouseKeeper(roomNumber);
             response.status(200).json({
-                message: 'Asignación de HouseKeeper realizada con éxito.'
+                message: answer
             });
         } catch (error) {
             console.error(`Error en autoAssignHouseKeeper: ${error.message}`);

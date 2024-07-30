@@ -32,6 +32,19 @@ export default class ServiceRoom {
             throw new Error('Room not found')
         }
     }
+
+    async getByHotelName(hotelName) {
+        try {
+            let rooms = await Room.findAll({ where: { hotelName: hotelName } });
+            if (!rooms || rooms.length === 0) {
+                throw new Error('No rooms found for the given hotel name');
+            }
+            return rooms;
+        } catch (error) {
+            throw new Error('Error retrieving rooms by hotel name');
+        }
+    }
+    
     
     async update(id, data) {
         try {

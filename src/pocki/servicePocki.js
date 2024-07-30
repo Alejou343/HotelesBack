@@ -115,7 +115,7 @@ export default class ServicePocki {
         if (!room) {
             throw new Error(`No se encontró habitación con número ${roomNumber}`);
         }
-
+    
         if (room.name_category_room.toLowerCase() === 'v/d') {
             const availableHouseKeeper = await CleaningStaff.findOne({ where: { role: 'housekeeper', state: true } });
             if (!availableHouseKeeper) {
@@ -127,10 +127,12 @@ export default class ServicePocki {
                 id_cleaningStaff: availableHouseKeeper.id_cleaningStaff,
                 startDate: new Date()
             });
-
+    
             // Mark HouseKeeper as occupied
             availableHouseKeeper.state = false;
             await availableHouseKeeper.save();
+    
+            return `La housekeeper ${availableHouseKeeper.code_role} ha sido asignada a la habitación ${roomNumber}`;
         } else if (room.name_category_room.toLowerCase() === 'v/c') {
             const currentAssignment = await AssignmentHk.findOne({
                 where: {
@@ -139,19 +141,29 @@ export default class ServicePocki {
                 },
                 order: [['startDate', 'DESC']]
             });
-
+    
             if (currentAssignment) {
                 currentAssignment.endDate = new Date();
                 await currentAssignment.save();
-
+    
                 const assignedHouseKeeper = await CleaningStaff.findByPk(currentAssignment.id_cleaningStaff);
                 if (assignedHouseKeeper) {
                     assignedHouseKeeper.state = true;
                     await assignedHouseKeeper.save();
+    
+                    return `La housekeeper ${assignedHouseKeeper.code_role} ahora está disponible después de limpiar la habitación ${roomNumber}`;
+                } else {
+                    return `No se encontró housekeeper para la asignación actual en la habitación ${roomNumber}`;
                 }
+            } else {
+                return `No se encontró asignación actual para la habitación ${roomNumber}`;
             }
+        } else {
+            return `La categoría de la habitación ${room.name_category_room} para la habitación ${roomNumber} no requiere asignación de housekeeper`;
         }
     }
+    
+    
 
 
     async getWorkerAssignments(workerCode) {

@@ -49,6 +49,20 @@ export default class Room {
         }
     }
 
+    async getAllTowers(request, response) {
+        try {
+            response.status(200).json({
+                message: 'successes find the room',
+                data: await Room.roomService.getAllTowers()
+            })
+        } catch (error) {
+            response.status(400).json({
+                message: `Error searching for room  ${error}`,
+                data: null
+            })
+        }
+    }
+
     async getAllByHotelName(request, response) {
         try {
             let hotelName = request.params.hotelName

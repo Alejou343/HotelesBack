@@ -33,6 +33,16 @@ export default class ServiceRoom {
         }
     }
 
+    async getAllTowers() {
+        try {
+            let towerNames = await Room.findAll({ attributes: ['hotelName'] })
+            if(!towerNames){throw new Error('Room not found')}
+            return towerNames
+        } catch (error) {
+            throw new Error('Room not found')
+        }
+    }
+
     async getByHotelName(hotelName) {
         try {
             let rooms = await Room.findAll({ where: { hotelName: hotelName } });

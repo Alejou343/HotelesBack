@@ -55,6 +55,7 @@ routes.delete('/api/cleaningStaffs/:id/',cleaningStaff.delete)
 routes.post('/api/rooms',room.create);
 routes.get('/api/rooms',room.getAll);
 routes.get('/api/rooms/:id/',room.getAllById);
+routes.get('/api/towers/',room.getAllTowers);
 routes.get('/api/rooms/hotelName/:hotelName/',room.getAllByHotelName);
 routes.put('/api/rooms/:id/',room.update);
 routes.delete('/api/rooms/:id/',room.delete);

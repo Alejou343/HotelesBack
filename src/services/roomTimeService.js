@@ -70,8 +70,6 @@ export default class roomTimeService {
                 attributes: ['fullName'] // Campos que deseas incluir
               }]})
 
-              console.log(result)
-
             const report = result.map(state => {
 
                 const startTime = new Date(state.initialDate);
@@ -90,7 +88,6 @@ export default class roomTimeService {
 
             return report
         } catch (error) {
-            console.log(error);
             throw new Error('CAN NOT FIND')
         }
     }

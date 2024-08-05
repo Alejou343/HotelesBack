@@ -9,11 +9,7 @@ const RoomTime = sequelize.define('RoomTime', {
         primaryKey: true,
         autoIncrement: true
     },
-    hotelName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    roomNumber: {
+    roomId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -25,28 +21,28 @@ const RoomTime = sequelize.define('RoomTime', {
         }
     },
     profile: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    timestamp: {
+    initialDate: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    duration: {
-        type: DataTypes.STRING,
+    endDate: {
+        type: DataTypes.DATE,
         allowNull: true
     }
-}, {
+},{
     timestamps: false
 });
 
 // Relaciones
-Room.hasMany(RoomTime, { foreignKey: 'roomNumber', sourceKey: 'number', onDelete: 'CASCADE' });
-RoomTime.belongsTo(Room, { foreignKey: 'roomNumber', targetKey: 'number' });
+Room.hasMany(RoomTime, { foreignKey: 'roomId', sourceKey: 'id_room', onDelete: 'CASCADE' });
+RoomTime.belongsTo(Room, { foreignKey: 'roomId', targetKey: 'id_room' });
 
-CleaningStaff.hasMany(RoomTime, { foreignKey: 'profile', sourceKey: 'fullName' });
-RoomTime.belongsTo(CleaningStaff, { foreignKey: 'profile', targetKey: 'fullName' });
+CleaningStaff.hasMany(RoomTime, { foreignKey: 'profile', sourceKey: 'id_cleaningStaff' });
+RoomTime.belongsTo(CleaningStaff, { foreignKey: 'profile', targetKey: 'id_cleaningStaff' });
 
 export default RoomTime;
 

@@ -5,6 +5,8 @@ import CleaningStaff from '../controllers/ControllerCleaningStaff.js'
 import Room from '../controllers/ControllerRoom.js'
 import CategoryRoom from '../controllers/ControllerCategoryRoom.js'
 import Pocki from '../pocki/controllerPocki.js'
+import roomTimeController from '../controllers/ControllerRoomTime.js'
+import roomTimeService from '../services/roomTimeService.js'
 
 let operationalRole=new OperationalRole()
 let  maintenanceInventory= new MaintenanceInventory()
@@ -12,6 +14,7 @@ let cleaningStaff=new CleaningStaff()
 let room=new Room()
 let categoryRoom= new CategoryRoom()
 let pocki=new Pocki()
+let RtController = new roomTimeController()
 
 let routes=express.Router()
 
@@ -66,6 +69,12 @@ routes.get('/api/CategoryRooms',categoryRoom.getAll);
 routes.get('/api/CategoryRoom/:id/',categoryRoom.getAllById)
 routes.put('/api/CategoryRoom/:id/',categoryRoom.update)
 routes.delete('/api/CategoryRooms/:id/',categoryRoom.delete)
+
+
+//ROOMTIME
+routes.get('/api/roomtime/:roomId', RtController.getByRoomId)
+routes.get('/api/roomtime/report/:roomId', RtController.getTimesByRoomId)
+routes.post('/api/roomtime', RtController.create)
 
 
 export default routes
